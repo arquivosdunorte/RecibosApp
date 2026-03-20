@@ -6,6 +6,8 @@
 <title>RecibosApp — Sistema de Emissão</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('yKSIYxPmIBr2J8LW-');</script>
 <style>
 :root{
   --verde:#1a472a;--verde-medio:#2d6a4f;--verde-claro:#52b788;
@@ -328,11 +330,9 @@ tr:last-child td{border-bottom:none}
           <button class="btn-login" onclick="enviarRecuperacao()">📧 Enviar Nova Senha</button>
         </div>
 
-        <!-- Passo 2: inserir senha temporária recebida -->
         <div id="rec-passo2" style="display:none">
           <p style="font-size:.84rem;color:var(--cinza);margin-bottom:14px;line-height:1.5">
-            Uma senha temporária foi gerada. Em um sistema real seria enviada por e-mail.
-            <br><strong id="senha-temp-display" style="color:var(--verde)"></strong>
+            Verifique seu e-mail e use a senha temporária recebida para definir uma nova senha abaixo.
           </p>
           <div class="login-group">
             <label>Nova Senha</label>
@@ -716,23 +716,45 @@ function voltarLogin(){
   document.getElementById('login-erro').style.display='none';
 }
 
-function enviarRecuperacao(){
+async function enviarRecuperacao(){
   const email=document.getElementById('campo-email-rec').value.trim();
   const auth=getAuth();
   const erro=document.getElementById('rec-erro');
   const suc=document.getElementById('rec-sucesso');
+  const btn=document.querySelector('#rec-passo1 .btn-login');
   erro.style.display='none';suc.style.display='none';
+
   if(!email){erro.textContent='Digite o e-mail.';erro.style.display='block';return}
   if(!auth||email.toLowerCase()!==auth.email.toLowerCase()){
     erro.textContent='❌ E-mail não encontrado nos registros.';erro.style.display='block';return;
   }
+
   // Gera senha temporária
   _senhaTemp=Math.random().toString(36).slice(-8).toUpperCase();
-  document.getElementById('senha-temp-display').textContent='Senha temporária: '+_senhaTemp;
-  suc.textContent='✅ E-mail encontrado! Em um sistema com servidor, a senha seria enviada para: '+auth.email;
-  suc.style.display='block';
-  document.getElementById('rec-passo1').style.display='none';
-  document.getElementById('rec-passo2').style.display='block';
+
+  // Loading no botão
+  btn.disabled=true;
+  btn.textContent='⏳ Enviando...';
+
+  try{
+    await emailjs.send('financeiro','template_f8d4swn',{
+      to_email: auth.email,
+      senha_temp: _senhaTemp
+    });
+    // Sucesso
+    document.getElementById('senha-temp-display').textContent='';
+    suc.textContent='✅ E-mail enviado para '+auth.email+'! Verifique sua caixa de entrada.';
+    suc.style.display='block';
+    document.getElementById('rec-passo1').style.display='none';
+    document.getElementById('rec-passo2').style.display='block';
+  }catch(e){
+    erro.textContent='❌ Falha ao enviar e-mail. Verifique sua conexão e tente novamente. ('+( e.text||e.message||'erro desconhecido')+')';
+    erro.style.display='block';
+    console.error('EmailJS erro:',e);
+  }finally{
+    btn.disabled=false;
+    btn.textContent='📧 Enviar Nova Senha';
+  }
 }
 
 function confirmarNovaSenha(){
