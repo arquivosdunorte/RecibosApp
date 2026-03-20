@@ -1,0 +1,2 @@
+# RecibosApp
+Emissão de recibos
