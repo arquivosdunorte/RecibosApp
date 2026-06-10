@@ -599,6 +599,47 @@ tr:last-child td{border-bottom:none}
             </div>
           </div>
         </div>
+        <div class="form-section">
+          <div class="form-section-title">Backup e Restauração</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+            <!-- BACKUP -->
+            <div style="background:var(--creme-escuro);border:var(--borda);border-radius:10px;padding:18px 20px">
+              <div style="font-size:.88rem;font-weight:700;color:var(--verde);margin-bottom:6px">📦 Backup dos Dados</div>
+              <p style="font-size:.8rem;color:var(--cinza);margin-bottom:14px;line-height:1.5">
+                Exporta todos os recibos em um arquivo <strong>.json</strong> que pode ser guardado como cópia de segurança.
+              </p>
+              <div style="font-size:.76rem;color:var(--cinza);margin-bottom:12px" id="backup-info"></div>
+              <button class="btn btn-primary" onclick="fazerBackup()" style="width:100%;justify-content:center">
+                📥 Baixar Backup (.json)
+              </button>
+            </div>
+
+            <!-- RESTORE -->
+            <div style="background:var(--creme-escuro);border:var(--borda);border-radius:10px;padding:18px 20px">
+              <div style="font-size:.88rem;font-weight:700;color:var(--verde);margin-bottom:6px">🔄 Restaurar Backup</div>
+              <p style="font-size:.8rem;color:var(--cinza);margin-bottom:14px;line-height:1.5">
+                Importa um arquivo <strong>.json</strong> gerado pelo backup. Escolha como restaurar:
+              </p>
+              <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:5px;font-size:.8rem;font-weight:400;text-transform:none;letter-spacing:0;cursor:pointer">
+                  <input type="radio" name="restore-modo" value="mesclar" checked> Mesclar com existentes
+                </label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:.8rem;font-weight:400;text-transform:none;letter-spacing:0;cursor:pointer">
+                  <input type="radio" name="restore-modo" value="substituir"> Substituir tudo
+                </label>
+              </div>
+              <input type="file" id="file-restore" accept=".json"
+                style="display:none" onchange="processarRestore(this)">
+              <button class="btn btn-outline" onclick="document.getElementById('file-restore').click()"
+                style="width:100%;justify-content:center">
+                📂 Selecionar Arquivo .json
+              </button>
+              <div id="restore-resultado" style="margin-top:10px;font-size:.8rem;display:none"></div>
+            </div>
+
+          </div>
+        </div>
       </div>
       <div class="form-actions">
         <button class="btn btn-dourado" onclick="salvarConfigApp()">💾 Salvar Configurações</button>
@@ -866,6 +907,7 @@ function confirmarNovaSenha(){
 function carregarConfigApp(){
   const auth=getAuth();
   if(auth) document.getElementById('cfg-email-app').value=auth.email||'';
+  atualizarInfoBackup();
 }
 function salvarConfigApp(){
   const atual=document.getElementById('cfg-atual').value;
@@ -1445,6 +1487,68 @@ function imprimirRelatorio(tipo){
     </style>`;
   wrap.style.display='block';
   setTimeout(()=>{window.print();setTimeout(()=>{wrap.style.display='none';wrap.innerHTML=''},900)},180);
+}
+
+/* ============================= BACKUP / RESTORE ============================= */
+function atualizarInfoBackup(){
+  const lista=getRecibos();
+  const el=document.getElementById('backup-info');
+  if(!el) return;
+  if(!lista.length){el.textContent='Nenhum recibo cadastrado ainda.';return}
+  const tot=lista.reduce((s,r)=>s+r.valorNum,0);
+  el.innerHTML=`<strong>${lista.length}</strong> recibo(s) &nbsp;·&nbsp; Total: <strong>R$ ${tot.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</strong>`;
+}
+
+function fazerBackup(){
+  const lista=getRecibos();
+  if(!lista.length){showToast('Nenhum recibo para fazer backup.',true);return}
+  const payload={app:'RecibosApp',versao:'1.0',data_backup:new Date().toISOString(),total_recibos:lista.length,recibos:lista};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8;'});
+  const a=document.createElement('a');
+  const ds=new Date().toLocaleDateString('pt-BR').replace(/\//g,'-');
+  a.href=URL.createObjectURL(blob);
+  a.download=`RecibosApp_Backup_${ds}.json`;
+  a.click();
+  showToast('📦 Backup de '+lista.length+' recibo(s) salvo!');
+}
+
+function processarRestore(input){
+  const file=input.files[0];if(!file)return;
+  const modo=document.querySelector('input[name="restore-modo"]:checked').value;
+  const resultado=document.getElementById('restore-resultado');
+  resultado.style.display='none';
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const dados=JSON.parse(e.target.result);
+      if(!dados.recibos||!Array.isArray(dados.recibos))throw new Error('Arquivo inválido: estrutura de recibos não encontrada.');
+      const novos=dados.recibos;
+      if(!novos.length)throw new Error('O arquivo de backup não contém recibos.');
+      let mensagem='';
+      if(modo==='substituir'){
+        if(!confirm(`⚠️ Isso irá SUBSTITUIR todos os ${getRecibos().length} recibo(s) existentes por ${novos.length} recibo(s) do backup.\n\nDeseja continuar?`)){input.value='';return}
+        saveRecibos(novos);
+        mensagem=`✅ ${novos.length} recibo(s) restaurados (dados anteriores substituídos).`;
+      }else{
+        const existentes=getRecibos();
+        const numerosExistentes=new Set(existentes.map(r=>r.numero));
+        const paraImportar=novos.filter(r=>!numerosExistentes.has(r.numero));
+        const ignorados=novos.length-paraImportar.length;
+        const mesclados=[...existentes,...paraImportar].sort((a,b)=>a.numero-b.numero);
+        saveRecibos(mesclados);
+        mensagem=`✅ ${paraImportar.length} recibo(s) importados.`+(ignorados>0?` ${ignorados} já existiam e foram ignorados.`:'');
+      }
+      atualizarNumDisplay();
+      resultado.innerHTML=`<div style="background:#d1fae5;border:1px solid #6ee7b7;border-radius:7px;padding:8px 12px;color:#065f46">${mensagem}</div>`;
+      resultado.style.display='block';
+      showToast('🔄 Restore concluído!');
+    }catch(err){
+      resultado.innerHTML=`<div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:7px;padding:8px 12px;color:#b91c1c">❌ Erro: ${err.message}</div>`;
+      resultado.style.display='block';
+    }
+    input.value='';
+  };
+  reader.readAsText(file);
 }
 
 /* CSV */
