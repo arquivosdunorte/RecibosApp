@@ -6,8 +6,6 @@
 <title>RecibosApp — Sistema de Emissão</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init('nn6lhh8vjP6GtU8vV');</script>
 <style>
 :root{
   --verde:#1a472a;--verde-medio:#2d6a4f;--verde-claro:#52b788;
@@ -19,70 +17,8 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Arial,Helvetica,sans-serif;background:var(--creme);color:var(--cinza-escuro);min-height:100vh}
 
-/* ===================== TELA DE LOGIN ===================== */
-#tela-login{
-  display:flex;align-items:center;justify-content:center;
-  min-height:100vh;
-  background:linear-gradient(135deg,#0f2d17 0%,#1a472a 50%,#2d6a4f 100%);
-  padding:20px;
-}
-.login-card{
-  background:#fff;border-radius:16px;
-  box-shadow:0 24px 80px rgba(0,0,0,.35);
-  width:100%;max-width:420px;overflow:hidden;
-}
-.login-header{
-  background:linear-gradient(135deg,var(--verde),var(--verde-medio));
-  padding:32px 36px 28px;text-align:center;color:#fff;
-}
-.login-logo{
-  width:60px;height:60px;background:var(--dourado);
-  border-radius:14px;display:flex;align-items:center;justify-content:center;
-  font-size:28px;margin:0 auto 14px;
-}
-.login-header h1{font-size:1.5rem;font-weight:700;letter-spacing:.5px}
-.login-header p{font-size:.8rem;color:var(--verde-claro);margin-top:4px;letter-spacing:.8px;text-transform:uppercase}
-.login-body{padding:30px 36px 36px}
-.login-group{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
-.login-group label{font-size:.76rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.6px}
-.login-input-wrap{position:relative}
-.login-input-wrap input{
-  width:100%;border:1.5px solid #d4c89a;border-radius:8px;padding:11px 40px 11px 14px;
-  font-family:Arial,Helvetica,sans-serif;font-size:.95rem;color:var(--cinza-escuro);
-  background:var(--creme);transition:border-color .2s,box-shadow .2s;outline:none;
-}
-.login-input-wrap input:focus{border-color:var(--verde-claro);box-shadow:0 0 0 3px rgba(82,183,136,.14);background:#fff}
-.toggle-pass{
-  position:absolute;right:12px;top:50%;transform:translateY(-50%);
-  background:none;border:none;cursor:pointer;color:var(--cinza);font-size:16px;padding:2px;
-}
-.login-erro{
-  background:#fee2e2;border:1px solid #fca5a5;border-radius:7px;
-  padding:9px 14px;font-size:.83rem;color:#b91c1c;margin-bottom:14px;display:none;
-}
-.login-sucesso{
-  background:#d1fae5;border:1px solid #6ee7b7;border-radius:7px;
-  padding:9px 14px;font-size:.83rem;color:#065f46;margin-bottom:14px;display:none;
-}
-.btn-login{
-  width:100%;padding:12px;background:var(--verde);color:#fff;border:none;
-  border-radius:8px;font-family:Arial,Helvetica,sans-serif;font-size:.96rem;font-weight:700;
-  cursor:pointer;letter-spacing:.4px;transition:all .18s;
-}
-.btn-login:hover{background:var(--verde-medio);transform:translateY(-1px);box-shadow:0 4px 14px rgba(26,71,42,.22)}
-.login-link{
-  display:block;text-align:center;margin-top:14px;font-size:.82rem;
-  color:var(--verde-medio);cursor:pointer;text-decoration:underline;
-}
-.login-link:hover{color:var(--verde)}
-.login-separator{text-align:center;font-size:.78rem;color:var(--cinza);margin:6px 0 14px}
-
-/* Painel de recuperação */
-#painel-recuperacao{display:none}
-#painel-login{display:block}
-
-/* ===================== APP (após login) ===================== */
-#app{display:none}
+/* ===================== APP ===================== */
+#app{display:block}
 
 /* HEADER */
 .app-header{background:var(--verde);color:var(--creme);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;box-shadow:0 2px 12px rgba(0,0,0,.18);position:sticky;top:0;z-index:100}
@@ -165,6 +101,33 @@ tr:last-child td{border-bottom:none}
 .summary-card{background:var(--creme-escuro);border-radius:9px;padding:12px 16px;flex:1;min-width:145px;border:var(--borda)}
 .sc-label{font-size:.7rem;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
 .sc-value{font-size:1.2rem;font-weight:700;color:var(--verde);margin-top:3px}
+
+/* ===== DASHBOARD ===== */
+.dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.dash-kpi{background:linear-gradient(135deg,var(--verde),var(--verde-medio));color:#fff;border-radius:12px;padding:18px 20px;position:relative;overflow:hidden}
+.dash-kpi::after{content:'';position:absolute;right:-20px;top:-20px;width:80px;height:80px;background:rgba(255,255,255,.08);border-radius:50%}
+.dash-kpi .dk-icon{font-size:22px;margin-bottom:8px;opacity:.9}
+.dash-kpi .dk-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.75);font-weight:700}
+.dash-kpi .dk-value{font-size:1.5rem;font-weight:700;margin-top:2px}
+.dash-kpi.dourado{background:linear-gradient(135deg,var(--dourado),var(--dourado-claro));color:var(--verde)}
+.dash-kpi.dourado .dk-label{color:rgba(26,71,42,.65)}
+
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.dash-card{background:var(--creme-escuro);border:var(--borda);border-radius:12px;padding:18px 20px}
+.dash-card-title{font-size:.86rem;font-weight:700;color:var(--verde);margin-bottom:14px}
+.dash-chart-area{min-height:180px;display:flex;align-items:flex-end;gap:6px;padding:0 4px}
+.dash-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.dash-bar{width:100%;background:linear-gradient(180deg,var(--verde-claro),var(--verde));border-radius:5px 5px 0 0;min-height:3px;transition:height .3s}
+.dash-bar-label{font-size:.66rem;color:var(--cinza);text-align:center;font-weight:600}
+.dash-bar-value{font-size:.66rem;color:var(--verde);font-weight:700}
+
+.dash-list-area{display:flex;flex-direction:column;gap:8px}
+.dash-list-item{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid #e5dfc7;border-radius:8px;padding:9px 13px}
+.dash-list-rank{width:22px;height:22px;background:var(--dourado);color:var(--verde);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-right:9px}
+.dash-list-name{flex:1;font-size:.83rem;font-weight:600;color:var(--cinza-escuro);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash-list-value{font-size:.84rem;font-weight:700;color:var(--verde);white-space:nowrap;margin-left:10px}
+.dash-list-sub{font-size:.7rem;color:var(--cinza);margin-left:31px}
+.dash-empty{text-align:center;padding:30px 10px;color:var(--cinza);font-size:.85rem}
 
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,30,15,.78);z-index:1000;align-items:center;justify-content:center;padding:14px}
@@ -280,112 +243,12 @@ tr:last-child td{border-bottom:none}
   .rc-topo{grid-template-columns:110px 1fr 130px}
   .rc-titulo{font-size:15px;letter-spacing:4px}
   .rc-campo-label,.rc-assinatura-label{min-width:150px}
-  .login-body{padding:22px 22px 28px}
-  .login-header{padding:24px 22px 20px}
+  .dash-kpis{grid-template-columns:1fr 1fr}
+  .dash-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-
-<!-- ==================== TELA DE LOGIN ==================== -->
-<div id="tela-login">
-  <div class="login-card">
-    <div class="login-header">
-      <div class="login-logo">📄</div>
-      <h1>RecibosApp</h1>
-      <p>Sistema de Emissão de Recibos</p>
-    </div>
-    <div class="login-body">
-
-      <!-- PAINEL LOGIN -->
-      <div id="painel-login">
-        <div id="login-erro" class="login-erro"></div>
-        <div class="login-group">
-          <label>Senha Administrativa</label>
-          <div class="login-input-wrap">
-            <input type="password" id="campo-senha" placeholder="Digite sua senha"
-              onkeydown="if(event.key==='Enter')fazerLogin()">
-            <button class="toggle-pass" onclick="toggleSenha('campo-senha',this)" title="Mostrar/ocultar">👁️</button>
-          </div>
-        </div>
-        <button class="btn-login" onclick="fazerLogin()">🔐 Entrar</button>
-        <span class="login-link" onclick="mostrarRecuperacao()">Esqueci minha senha</span>
-      </div>
-
-      <!-- PAINEL RECUPERAÇÃO -->
-      <div id="painel-recuperacao">
-        <div id="rec-erro" class="login-erro"></div>
-        <div id="rec-sucesso" class="login-sucesso"></div>
-
-        <!-- Passo 1: informar e-mail -->
-        <div id="rec-passo1">
-          <p style="font-size:.84rem;color:var(--cinza);margin-bottom:14px;line-height:1.5">
-            Digite o e-mail cadastrado para receber a nova senha.
-          </p>
-          <div class="login-group">
-            <label>E-mail cadastrado</label>
-            <input type="email" id="campo-email-rec" placeholder="seu@email.com"
-              onkeydown="if(event.key==='Enter')enviarRecuperacao()">
-          </div>
-          <button class="btn-login" onclick="enviarRecuperacao()">📧 Enviar Nova Senha</button>
-        </div>
-
-        <div id="rec-passo2" style="display:none">
-          <p style="font-size:.84rem;color:var(--cinza);margin-bottom:14px;line-height:1.5">
-            Verifique seu e-mail e use a senha temporária recebida para definir uma nova senha abaixo.
-          </p>
-          <div class="login-group">
-            <label>Nova Senha</label>
-            <div class="login-input-wrap">
-              <input type="password" id="campo-nova-senha" placeholder="Digite a nova senha"
-                onkeydown="if(event.key==='Enter')confirmarNovaSenha()">
-              <button class="toggle-pass" onclick="toggleSenha('campo-nova-senha',this)">👁️</button>
-            </div>
-          </div>
-          <div class="login-group">
-            <label>Confirmar Nova Senha</label>
-            <div class="login-input-wrap">
-              <input type="password" id="campo-confirma-senha" placeholder="Repita a nova senha"
-                onkeydown="if(event.key==='Enter')confirmarNovaSenha()">
-              <button class="toggle-pass" onclick="toggleSenha('campo-confirma-senha',this)">👁️</button>
-            </div>
-          </div>
-          <button class="btn-login" onclick="confirmarNovaSenha()">✅ Redefinir Senha</button>
-        </div>
-
-        <span class="login-link" onclick="voltarLogin()" style="margin-top:10px">← Voltar ao login</span>
-      </div>
-
-      <!-- CONFIGURAÇÕES (só aparecem no 1º acesso) -->
-      <div id="painel-config" style="display:none">
-        <p style="font-size:.84rem;color:var(--cinza);margin-bottom:16px;line-height:1.5">
-          <strong>Primeiro acesso!</strong> Configure a senha e e-mail de recuperação.
-        </p>
-        <div id="cfg-erro" class="login-erro"></div>
-        <div class="login-group">
-          <label>Senha Administrativa</label>
-          <div class="login-input-wrap">
-            <input type="password" id="cfg-senha" placeholder="Crie uma senha forte">
-            <button class="toggle-pass" onclick="toggleSenha('cfg-senha',this)">👁️</button>
-          </div>
-        </div>
-        <div class="login-group">
-          <label>Confirmar Senha</label>
-          <div class="login-input-wrap">
-            <input type="password" id="cfg-confirma" placeholder="Repita a senha">
-            <button class="toggle-pass" onclick="toggleSenha('cfg-confirma',this)">👁️</button>
-          </div>
-        </div>
-        <div class="login-group">
-          <label>E-mail para Recuperação</label>
-          <input type="email" id="cfg-email" placeholder="seu@email.com">
-        </div>
-        <button class="btn-login" onclick="salvarConfig()">💾 Salvar e Entrar</button>
-      </div>
-
-    </div>
-  </div>
-</div>
 
 <!-- ==================== APP ==================== -->
 <div id="app">
@@ -398,22 +261,60 @@ tr:last-child td{border-bottom:none}
     </div>
     <div class="header-right">
       <div class="header-num" id="header-num">Nº 0001</div>
-      <button class="btn-logout" onclick="fazerLogout()">🚪 Sair</button>
     </div>
   </header>
 
   <nav class="nav-tabs">
-    <div class="nav-tab active"  onclick="showTab('emissao',this)">✍️ Emitir Recibo</div>
+    <div class="nav-tab active" onclick="showTab('dashboard',this)">📊 Dashboard</div>
+    <div class="nav-tab" onclick="showTab('emissao',this)">✍️ Emitir Recibo</div>
     <div class="nav-tab" onclick="showTab('relatorio',this)">📋 Rel. Completo</div>
-    <div class="nav-tab" onclick="showTab('rel-emitente',this)">👤 Por Emitente</div>
+    <div class="nav-tab" onclick="showTab('rel-emitente',this)">👤 Por Pagador</div>
     <div class="nav-tab" onclick="showTab('rel-recebedor',this)">🏢 Por Recebedor</div>
+    <div class="nav-tab" onclick="showTab('rel-personalizado',this)">🔎 Rel. Personalizado</div>
     <div class="nav-tab" onclick="showTab('configuracoes',this)">⚙️ Configurações</div>
   </nav>
 
   <div class="main">
 
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" class="panel active">
+      <div class="panel-header">
+        <div class="ph-icon">📊</div>
+        <div><h2>Dashboard</h2><p>Visão geral dos recibos emitidos</p></div>
+      </div>
+      <div class="form-body">
+
+        <!-- KPIs -->
+        <div class="dash-kpis" id="dash-kpis"></div>
+
+        <!-- Gráficos -->
+        <div class="dash-grid">
+          <div class="dash-card">
+            <div class="dash-card-title">📈 Valores Emitidos por Mês</div>
+            <div id="dash-grafico-mes" class="dash-chart-area"></div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-title">🏆 Top 5 Pagadores</div>
+            <div id="dash-top-pagadores" class="dash-list-area"></div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="dash-card">
+            <div class="dash-card-title">🏆 Top 5 Recebedores</div>
+            <div id="dash-top-recebedores" class="dash-list-area"></div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-title">🕓 Últimos Recibos Emitidos</div>
+            <div id="dash-ultimos" class="dash-list-area"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- EMISSÃO -->
-    <div id="tab-emissao" class="panel active">
+    <div id="tab-emissao" class="panel">
       <div class="panel-header">
         <div class="ph-icon">📝</div>
         <div><h2>Emissão de Recibo</h2><p>Preencha os dados abaixo</p></div>
@@ -532,15 +433,15 @@ tr:last-child td{border-bottom:none}
       <div class="rel-summary" id="summary-completo"></div>
     </div>
 
-    <!-- POR EMITENTE -->
+    <!-- POR PAGADOR -->
     <div id="tab-rel-emitente" class="panel">
       <div class="panel-header">
         <div class="ph-icon">👤</div>
-        <div><h2>Relatório por Emitente</h2><p>Agrupados por emitente</p></div>
+        <div><h2>Relatório por Pagador</h2><p>Agrupados por pagador</p></div>
       </div>
       <div class="filter-bar">
-        <select id="sel-emitente" onchange="renderRelatorioEmitente()"><option value="">-- Todos os emitentes --</option></select>
-        <input type="text" id="filtro-emitente" placeholder="🔍 Buscar emitente..." oninput="renderRelatorioEmitente()">
+        <select id="sel-emitente" onchange="renderRelatorioEmitente()"><option value="">-- Todos os pagadores --</option></select>
+        <input type="text" id="filtro-emitente" placeholder="🔍 Buscar pagador..." oninput="renderRelatorioEmitente()">
         <button class="btn btn-primary btn-sm" onclick="imprimirRelatorio('emitente')">🖨️ Imprimir Relatório</button>
       </div>
       <div class="rel-table-wrap" id="tabela-emitente"></div>
@@ -560,6 +461,37 @@ tr:last-child td{border-bottom:none}
       </div>
       <div class="rel-table-wrap" id="tabela-recebedor"></div>
       <div class="rel-summary" id="summary-recebedor"></div>
+    </div>
+
+    <!-- RELATÓRIO PERSONALIZADO -->
+    <div id="tab-rel-personalizado" class="panel">
+      <div class="panel-header">
+        <div class="ph-icon">🔎</div>
+        <div><h2>Relatório Personalizado</h2><p>Filtre por pagador, recebedor, valor e período</p></div>
+      </div>
+      <div class="filter-bar" style="flex-direction:column;align-items:stretch;gap:10px">
+        <div style="display:flex;gap:11px;flex-wrap:wrap">
+          <input type="text" id="rp-pagador" placeholder="🙂 Nome do pagador..." oninput="renderRelatorioPersonalizado()" style="flex:1;min-width:180px">
+          <input type="text" id="rp-recebedor" placeholder="🏢 Nome do recebedor..." oninput="renderRelatorioPersonalizado()" style="flex:1;min-width:180px">
+        </div>
+        <div style="display:flex;gap:11px;flex-wrap:wrap;align-items:center">
+          <label style="font-size:.74rem;font-weight:700;color:var(--cinza);text-transform:uppercase">Valor</label>
+          <input type="text" id="rp-valor-min" placeholder="Mínimo (ex: 100,00)" oninput="formatarValor(this);renderRelatorioPersonalizado()" style="width:150px">
+          <span style="color:var(--cinza)">até</span>
+          <input type="text" id="rp-valor-max" placeholder="Máximo (ex: 1000,00)" oninput="formatarValor(this);renderRelatorioPersonalizado()" style="width:150px">
+          <label style="font-size:.74rem;font-weight:700;color:var(--cinza);text-transform:uppercase;margin-left:10px">Período</label>
+          <input type="date" id="rp-data-ini" onchange="renderRelatorioPersonalizado()">
+          <span style="color:var(--cinza)">até</span>
+          <input type="date" id="rp-data-fim" onchange="renderRelatorioPersonalizado()">
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button class="btn btn-outline btn-sm" onclick="limparFiltrosPersonalizado()">🧹 Limpar Filtros</button>
+          <button class="btn btn-outline btn-sm" onclick="exportarCSVPersonalizado()">📥 Exportar CSV</button>
+          <button class="btn btn-primary btn-sm" onclick="imprimirRelatorio('personalizado')">🖨️ Imprimir Relatório</button>
+        </div>
+      </div>
+      <div class="rel-table-wrap" id="tabela-personalizado"></div>
+      <div class="rel-summary" id="summary-personalizado"></div>
     </div>
 
     <!-- CONFIGURAÇÕES -->
@@ -636,6 +568,49 @@ tr:last-child td{border-bottom:none}
                 📂 Selecionar Arquivo .json
               </button>
               <div id="restore-resultado" style="margin-top:10px;font-size:.8rem;display:none"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">Backup Automático</div>
+          <div style="background:var(--creme-escuro);border:var(--borda);border-radius:10px;padding:18px 20px">
+
+            <p style="font-size:.8rem;color:var(--cinza);margin-bottom:14px;line-height:1.5">
+              Escolha uma pasta no seu computador e defina o intervalo. Enquanto esta aba estiver aberta no navegador, o sistema salvará backups automaticamente nessa pasta.
+              <br><strong>Compatível com Chrome e Edge.</strong>
+            </p>
+
+            <div id="backup-auto-aviso-sessao" style="display:none;background:#fef3c7;border:1px solid #fcd34d;border-radius:7px;padding:9px 13px;font-size:.78rem;color:#92400e;margin-bottom:12px">
+              ⚠️ Você tinha o backup automático ativado, mas por segurança o navegador exige que você selecione a pasta novamente nesta sessão.
+            </div>
+
+            <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px">
+              <div style="flex:1;min-width:200px">
+                <label style="display:block;font-size:.74rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Pasta de Destino</label>
+                <button class="btn btn-outline btn-sm" onclick="escolherPastaBackup()" style="width:100%;justify-content:center">
+                  📂 Selecionar Pasta
+                </button>
+              </div>
+              <div style="width:160px">
+                <label style="display:block;font-size:.74rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Intervalo (minutos)</label>
+                <input type="number" id="backup-auto-intervalo" min="1" value="30" style="width:100%">
+              </div>
+            </div>
+
+            <div id="backup-auto-status" style="display:none;background:#fff;border:1px solid #d4c89a;border-radius:8px;padding:12px 16px;margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+                <span id="backup-auto-pasta-nome" style="font-size:.85rem;font-weight:700;color:var(--verde)"></span>
+                <span id="backup-auto-ativo-badge" style="font-size:.78rem;font-weight:700;color:var(--cinza)">⚪ Inativo</span>
+              </div>
+              <div id="backup-auto-ultimo" style="font-size:.76rem;color:var(--cinza);margin-top:6px">Nenhum backup automático realizado ainda nesta sessão.</div>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-dourado btn-sm" onclick="ativarBackupAutomatico()">▶️ Ativar Backup Automático</button>
+              <button class="btn btn-outline btn-sm" onclick="desativarBackupAutomatico()">⏸️ Desativar</button>
+              <button class="btn btn-outline btn-sm" onclick="salvarBackupNaPasta().then(ok=>ok&&showToast('📦 Backup manual realizado na pasta!'))">📦 Fazer Backup Agora</button>
             </div>
 
           </div>
@@ -764,173 +739,29 @@ tr:last-child td{border-bottom:none}
 <div class="toast" id="toast"></div>
 
 <script>
-/* ============================= AUTH ============================= */
-const AUTH_KEY  = 'recibos_auth';
 const DATA_KEY  = 'recibos_v3';
+const CFG_KEY   = 'recibos_cfg';
 
-function getAuth(){try{return JSON.parse(localStorage.getItem(AUTH_KEY)||'null')}catch{return null}}
-function saveAuth(a){localStorage.setItem(AUTH_KEY,JSON.stringify(a))}
+function getCfg(){try{return JSON.parse(localStorage.getItem(CFG_KEY)||'{}')}catch{return{}}}
+function saveCfg(c){localStorage.setItem(CFG_KEY,JSON.stringify(c))}
 
-function hashSimples(s){
-  // hash simples para armazenamento local (não criptografia real)
-  let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return String(h>>>0);
-}
-
-function initAuth(){
-  const auth=getAuth();
-  if(!auth){
-    // Primeiro acesso
-    document.getElementById('painel-login').style.display='none';
-    document.getElementById('painel-config').style.display='block';
-  }
-}
-
-function toggleSenha(id,btn){
-  const inp=document.getElementById(id);
-  if(inp.type==='password'){inp.type='text';btn.textContent='🙈'}
-  else{inp.type='password';btn.textContent='👁️'}
-}
-
-function fazerLogin(){
-  const auth=getAuth();
-  const s=document.getElementById('campo-senha').value;
-  const erro=document.getElementById('login-erro');
-  if(!s){erro.textContent='Digite a senha.';erro.style.display='block';return}
-  if(hashSimples(s)===auth.senhaHash){
-    erro.style.display='none';
-    document.getElementById('tela-login').style.display='none';
-    document.getElementById('app').style.display='block';
-    initApp();
-  }else{
-    erro.textContent='❌ Senha incorreta. Tente novamente.';
-    erro.style.display='block';
-    document.getElementById('campo-senha').value='';
-  }
-}
-
-function fazerLogout(){
-  document.getElementById('app').style.display='none';
-  document.getElementById('tela-login').style.display='flex';
-  document.getElementById('campo-senha').value='';
-  document.getElementById('login-erro').style.display='none';
-  document.getElementById('painel-login').style.display='block';
-  document.getElementById('painel-recuperacao').style.display='none';
-}
-
-function salvarConfig(){
-  const s=document.getElementById('cfg-senha').value;
-  const c=document.getElementById('cfg-confirma').value;
-  const e=document.getElementById('cfg-email').value.trim();
-  const err=document.getElementById('cfg-erro');
-  if(!s||s.length<4){err.textContent='A senha deve ter pelo menos 4 caracteres.';err.style.display='block';return}
-  if(s!==c){err.textContent='As senhas não coincidem.';err.style.display='block';return}
-  if(!e||!e.includes('@')){err.textContent='Digite um e-mail válido.';err.style.display='block';return}
-  saveAuth({senhaHash:hashSimples(s),email:e});
-  err.style.display='none';
-  document.getElementById('painel-config').style.display='none';
-  document.getElementById('painel-login').style.display='block';
-  showToast('✅ Configuração salva! Faça login.');
-}
-
-/* RECUPERAÇÃO */
-let _senhaTemp='';
-function mostrarRecuperacao(){
-  document.getElementById('painel-login').style.display='none';
-  document.getElementById('painel-recuperacao').style.display='block';
-  document.getElementById('rec-passo1').style.display='block';
-  document.getElementById('rec-passo2').style.display='none';
-  document.getElementById('rec-erro').style.display='none';
-  document.getElementById('rec-sucesso').style.display='none';
-}
-function voltarLogin(){
-  document.getElementById('painel-recuperacao').style.display='none';
-  document.getElementById('painel-login').style.display='block';
-  document.getElementById('login-erro').style.display='none';
-}
-
-async function enviarRecuperacao(){
-  const email=document.getElementById('campo-email-rec').value.trim();
-  const auth=getAuth();
-  const erro=document.getElementById('rec-erro');
-  const suc=document.getElementById('rec-sucesso');
-  const btn=document.querySelector('#rec-passo1 .btn-login');
-  erro.style.display='none';suc.style.display='none';
-
-  if(!email){erro.textContent='Digite o e-mail.';erro.style.display='block';return}
-  if(!auth||email.toLowerCase()!==auth.email.toLowerCase()){
-    erro.textContent='❌ E-mail não encontrado nos registros.';erro.style.display='block';return;
-  }
-
-  // Gera senha temporária
-  _senhaTemp=Math.random().toString(36).slice(-8).toUpperCase();
-
-  // Loading no botão
-  btn.disabled=true;
-  btn.textContent='⏳ Enviando...';
-
-  try{
-    await emailjs.send('financeiro','template_f8d4swn',{
-      to_email: auth.email,
-      senha_temp: _senhaTemp
-    });
-    // Sucesso
-    document.getElementById('senha-temp-display').textContent='';
-    suc.textContent='✅ E-mail enviado para '+auth.email+'! Verifique sua caixa de entrada.';
-    suc.style.display='block';
-    document.getElementById('rec-passo1').style.display='none';
-    document.getElementById('rec-passo2').style.display='block';
-  }catch(e){
-    erro.textContent='❌ Falha ao enviar e-mail. Verifique sua conexão e tente novamente. ('+( e.text||e.message||'erro desconhecido')+')';
-    erro.style.display='block';
-    console.error('EmailJS erro:',e);
-  }finally{
-    btn.disabled=false;
-    btn.textContent='📧 Enviar Nova Senha';
-  }
-}
-
-function confirmarNovaSenha(){
-  const nova=document.getElementById('campo-nova-senha').value;
-  const conf=document.getElementById('campo-confirma-senha').value;
-  const erro=document.getElementById('rec-erro');
-  erro.style.display='none';
-  if(!nova||nova.length<4){erro.textContent='A nova senha deve ter pelo menos 4 caracteres.';erro.style.display='block';return}
-  if(nova!==conf){erro.textContent='As senhas não coincidem.';erro.style.display='block';return}
-  const auth=getAuth();
-  auth.senhaHash=hashSimples(nova);
-  saveAuth(auth);
-  voltarLogin();
-  showToast('✅ Senha redefinida com sucesso!');
-}
-
-/* CONFIGURAÇÕES APP */
+/* CONFIGURAÇÕES APP (sem senha — apenas e-mail de notificação opcional) */
 function carregarConfigApp(){
-  const auth=getAuth();
-  if(auth) document.getElementById('cfg-email-app').value=auth.email||'';
+  const cfg=getCfg();
+  if(document.getElementById('cfg-email-app')) document.getElementById('cfg-email-app').value=cfg.email||'';
   atualizarInfoBackup();
+  atualizarInfoBackupAuto();
 }
 function salvarConfigApp(){
-  const atual=document.getElementById('cfg-atual').value;
-  const nova=document.getElementById('cfg-nova').value;
-  const conf=document.getElementById('cfg-confirma-nova').value;
   const email=document.getElementById('cfg-email-app').value.trim();
   const err=document.getElementById('cfg-app-erro');
   const suc=document.getElementById('cfg-app-sucesso');
   err.style.display='none';suc.style.display='none';
-  const auth=getAuth();
-  if(!email||!email.includes('@')){err.textContent='Digite um e-mail válido.';err.style.display='block';return}
-  if(nova||conf||atual){
-    if(hashSimples(atual)!==auth.senhaHash){err.textContent='❌ Senha atual incorreta.';err.style.display='block';return}
-    if(nova.length<4){err.textContent='A nova senha deve ter pelo menos 4 caracteres.';err.style.display='block';return}
-    if(nova!==conf){err.textContent='As senhas não coincidem.';err.style.display='block';return}
-    auth.senhaHash=hashSimples(nova);
-  }
-  auth.email=email;
-  saveAuth(auth);
+  if(email&&!email.includes('@')){err.textContent='Digite um e-mail válido.';err.style.display='block';return}
+  const cfg=getCfg();
+  cfg.email=email;
+  saveCfg(cfg);
   suc.textContent='✅ Configurações salvas com sucesso!';suc.style.display='block';
-  document.getElementById('cfg-atual').value='';
-  document.getElementById('cfg-nova').value='';
-  document.getElementById('cfg-confirma-nova').value='';
   setTimeout(()=>suc.style.display='none',3000);
 }
 
@@ -940,6 +771,7 @@ function initApp(){
   document.getElementById('data-emissao').value=dataFormatada(new Date());
   initCanvas();
   carregarConfigApp();
+  renderDashboard();
 }
 
 /* STORAGE */
@@ -965,9 +797,11 @@ function showTab(name,el){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   el.classList.add('active');
+  if(name==='dashboard') renderDashboard();
   if(name==='relatorio') renderRelatorioCompleto();
   if(name==='rel-emitente'){populateSelects();renderRelatorioEmitente()}
   if(name==='rel-recebedor'){populateSelects();renderRelatorioRecebedor()}
+  if(name==='rel-personalizado') renderRelatorioPersonalizado();
   if(name==='configuracoes') carregarConfigApp();
 }
 
@@ -1223,79 +1057,6 @@ function emitirDuplicado(){
 }
 
 /* IMPRIMIR RELATÓRIO */
-function imprimirRelatorio(tipo){
-  let titulo,headers,rows,resumo;
-  const fmtVal=v=>v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-
-  if(tipo==='completo'){
-    const busca=document.getElementById('filtro-geral').value.toLowerCase();
-    const dI=document.getElementById('filtro-data-ini').value;
-    const dF=document.getElementById('filtro-data-fim').value;
-    let lista=getRecibos();
-    if(busca)lista=lista.filter(r=>r.recebedor.nome.toLowerCase().includes(busca)||r.emitente.nome.toLowerCase().includes(busca)||String(r.numero).includes(busca));
-    if(dI)lista=lista.filter(r=>r.dataISO>=dI);
-    if(dF)lista=lista.filter(r=>r.dataISO<=dF);
-    titulo='Relatório Completo de Recibos';
-    headers=['Nº','Data','Recebedor','CPF/CNPJ','Emitente','Valor','Referente'];
-    rows=lista.map(r=>`<tr><td>${String(r.numero).padStart(4,'0')}</td><td>${r.data}</td><td>${r.recebedor.nome}</td><td>${r.recebedor.doc}</td><td>${r.emitente.nome}</td><td style="text-align:right;font-weight:700">R$ ${r.valor}</td><td>${r.descricao||'-'}</td></tr>`);
-    const tot=lista.reduce((s,r)=>s+r.valorNum,0);
-    resumo=`<strong>${lista.length}</strong> recibos &nbsp;|&nbsp; Total: <strong>R$ ${fmtVal(tot)}</strong>`;
-  } else if(tipo==='emitente'){
-    const sel=document.getElementById('sel-emitente').value;
-    const busca=document.getElementById('filtro-emitente').value.toLowerCase();
-    let lista=getRecibos();
-    if(sel)lista=lista.filter(r=>r.emitente.nome===sel);
-    if(busca)lista=lista.filter(r=>r.emitente.nome.toLowerCase().includes(busca));
-    titulo='Relatório por Emitente'+(sel?' — '+sel:'');
-    headers=['Nº','Data','Emitente','CPF/CNPJ','Recebedor','Valor'];
-    rows=lista.map(r=>`<tr><td>${String(r.numero).padStart(4,'0')}</td><td>${r.data}</td><td>${r.emitente.nome}</td><td>${r.emitente.doc}</td><td>${r.recebedor.nome}</td><td style="text-align:right;font-weight:700">R$ ${r.valor}</td></tr>`);
-    const tot=lista.reduce((s,r)=>s+r.valorNum,0);
-    resumo=`<strong>${lista.length}</strong> recibos &nbsp;|&nbsp; Total: <strong>R$ ${fmtVal(tot)}</strong>`;
-  } else {
-    const sel=document.getElementById('sel-recebedor').value;
-    const busca=document.getElementById('filtro-recebedor').value.toLowerCase();
-    let lista=getRecibos();
-    if(sel)lista=lista.filter(r=>r.recebedor.nome===sel);
-    if(busca)lista=lista.filter(r=>r.recebedor.nome.toLowerCase().includes(busca));
-    titulo='Relatório por Recebedor'+(sel?' — '+sel:'');
-    headers=['Nº','Data','Recebedor','CPF/CNPJ','Emitente','Valor'];
-    rows=lista.map(r=>`<tr><td>${String(r.numero).padStart(4,'0')}</td><td>${r.data}</td><td>${r.recebedor.nome}</td><td>${r.recebedor.doc}</td><td>${r.emitente.nome}</td><td style="text-align:right;font-weight:700">R$ ${r.valor}</td></tr>`);
-    const tot=lista.reduce((s,r)=>s+r.valorNum,0);
-    resumo=`<strong>${lista.length}</strong> recibos &nbsp;|&nbsp; Total: <strong>R$ ${fmtVal(tot)}</strong>`;
-  }
-
-  const html=`
-    <div id="rel-print-doc" style="font-family:Arial,sans-serif;font-size:12px;color:#111;padding:20px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #1a472a;padding-bottom:10px;margin-bottom:14px">
-        <div>
-          <div style="font-size:18px;font-weight:700;color:#1a472a">RecibosApp</div>
-          <div style="font-size:14px;font-weight:700;margin-top:3px">${titulo}</div>
-        </div>
-        <div style="text-align:right;font-size:11px;color:#555">
-          Emitido em: ${dataFormatada(new Date())}
-        </div>
-      </div>
-      <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:14px">
-        <thead>
-          <tr style="background:#1a472a;color:#fff">
-            ${headers.map(h=>`<th style="padding:7px 9px;text-align:left;font-size:10px;letter-spacing:.4px;text-transform:uppercase">${h}</th>`).join('')}
-          </tr>
-        </thead>
-        <tbody>
-          ${rows.length ? rows.join('') : `<tr><td colspan="${headers.length}" style="padding:20px;text-align:center;color:#888">Nenhum registro encontrado.</td></tr>`}
-        </tbody>
-      </table>
-      <div style="background:#f0ead6;border:1px solid #d4c89a;border-radius:6px;padding:9px 14px;font-size:12px;color:#374151">
-        Resumo: ${resumo}
-      </div>
-    </div>`;
-
-  const wrap=document.getElementById('print-wrap');
-  wrap.innerHTML=html;
-  wrap.style.display='block';
-  setTimeout(()=>{window.print();setTimeout(()=>{wrap.style.display='none';wrap.innerHTML=''},900)},180);
-}
-
 function delay(ms){return new Promise(res=>setTimeout(res,ms))}
 
 /* LIMPAR */
@@ -1355,7 +1116,7 @@ function populateSelects(){
   const re=[...new Set(lista.map(r=>r.recebedor.nome))].sort();
   const sE=document.getElementById('sel-emitente'),sR=document.getElementById('sel-recebedor');
   const vE=sE.value,vR=sR.value;
-  sE.innerHTML='<option value="">-- Todos os emitentes --</option>'+em.map(e=>`<option value="${e}"${e===vE?' selected':''}>${e}</option>`).join('');
+  sE.innerHTML='<option value="">-- Todos os pagadores --</option>'+em.map(e=>`<option value="${e}"${e===vE?' selected':''}>${e}</option>`).join('');
   sR.innerHTML='<option value="">-- Todos os recebedores --</option>'+re.map(r=>`<option value="${r}"${r===vR?' selected':''}>${r}</option>`).join('');
 }
 function renderRelatorioEmitente(){
@@ -1455,8 +1216,9 @@ function confirmarDuplicar(){
 function imprimirRelatorio(tipo){
   let titulo='',tabelaId='',summaryId='';
   if(tipo==='completo'){titulo='Relatório Completo de Recibos';tabelaId='tabela-completa';summaryId='summary-completo'}
-  if(tipo==='emitente'){titulo='Relatório por Emitente';tabelaId='tabela-emitente';summaryId='summary-emitente'}
+  if(tipo==='emitente'){titulo='Relatório por Pagador';tabelaId='tabela-emitente';summaryId='summary-emitente'}
   if(tipo==='recebedor'){titulo='Relatório por Recebedor';tabelaId='tabela-recebedor';summaryId='summary-recebedor'}
+  if(tipo==='personalizado'){titulo='Relatório Personalizado';tabelaId='tabela-personalizado';summaryId='summary-personalizado'}
   const tabela=document.getElementById(tabelaId).innerHTML;
   const summ=document.getElementById(summaryId).innerHTML;
   const wrap=document.getElementById('print-wrap');
@@ -1561,6 +1323,293 @@ function exportarCSV(){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='recibos.csv';a.click();
 }
 
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  const lista=getRecibos();
+  const kpisEl=document.getElementById('dash-kpis');
+  if(!kpisEl) return;
+
+  const totalRecibos=lista.length;
+  const totalValor=lista.reduce((s,r)=>s+r.valorNum,0);
+  const pagadoresUnicos=[...new Set(lista.map(r=>r.recebedor.nome))].length;
+  const recebedoresUnicos=[...new Set(lista.map(r=>r.emitente.nome))].length;
+
+  kpisEl.innerHTML=`
+    <div class="dash-kpi">
+      <div class="dk-icon">📄</div>
+      <div class="dk-label">Total de Recibos</div>
+      <div class="dk-value">${totalRecibos}</div>
+    </div>
+    <div class="dash-kpi dourado">
+      <div class="dk-icon">💰</div>
+      <div class="dk-label">Valor Total Emitido</div>
+      <div class="dk-value">R$ ${totalValor.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+    </div>
+    <div class="dash-kpi">
+      <div class="dk-icon">🙂</div>
+      <div class="dk-label">Pagadores Únicos</div>
+      <div class="dk-value">${pagadoresUnicos}</div>
+    </div>
+    <div class="dash-kpi dourado">
+      <div class="dk-icon">🏢</div>
+      <div class="dk-label">Recebedores Únicos</div>
+      <div class="dk-value">${recebedoresUnicos}</div>
+    </div>`;
+
+  renderDashGraficoMes(lista);
+  renderDashTop(lista,'recebedor','dash-top-pagadores');
+  renderDashTop(lista,'emitente','dash-top-recebedores');
+  renderDashUltimos(lista);
+}
+
+function renderDashGraficoMes(lista){
+  const el=document.getElementById('dash-grafico-mes');
+  if(!lista.length){el.innerHTML='<div class="dash-empty">Nenhum dado para exibir.</div>';return}
+  const porMes={};
+  lista.forEach(r=>{
+    const chave=r.dataISO.slice(0,7);
+    porMes[chave]=(porMes[chave]||0)+r.valorNum;
+  });
+  const chaves=Object.keys(porMes).sort().slice(-6);
+  const max=Math.max(...chaves.map(k=>porMes[k]),1);
+  const mesesNomes=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  el.innerHTML=chaves.map(k=>{
+    const [ano,mes]=k.split('-');
+    const valor=porMes[k];
+    const alturaPct=Math.max(6,(valor/max)*100);
+    return `<div class="dash-bar-wrap">
+      <div class="dash-bar-value">R$ ${valor.toLocaleString('pt-BR',{maximumFractionDigits:0})}</div>
+      <div class="dash-bar" style="height:${alturaPct}%"></div>
+      <div class="dash-bar-label">${mesesNomes[parseInt(mes)-1]}/${ano.slice(2)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderDashTop(lista,campo,elId){
+  const el=document.getElementById(elId);
+  if(!lista.length){el.innerHTML='<div class="dash-empty">Nenhum dado para exibir.</div>';return}
+  const agrupado={};
+  lista.forEach(r=>{
+    const nome=r[campo].nome;
+    if(!agrupado[nome]) agrupado[nome]={total:0,qtd:0};
+    agrupado[nome].total+=r.valorNum;
+    agrupado[nome].qtd+=1;
+  });
+  const top=Object.entries(agrupado).sort((a,b)=>b[1].total-a[1].total).slice(0,5);
+  el.innerHTML=top.map((item,i)=>`
+    <div>
+      <div class="dash-list-item">
+        <div style="display:flex;align-items:center;overflow:hidden">
+          <span class="dash-list-rank">${i+1}</span>
+          <span class="dash-list-name">${item[0]}</span>
+        </div>
+        <span class="dash-list-value">R$ ${item[1].total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>
+      </div>
+      <div class="dash-list-sub">${item[1].qtd} recibo(s)</div>
+    </div>`).join('');
+}
+
+function renderDashUltimos(lista){
+  const el=document.getElementById('dash-ultimos');
+  if(!lista.length){el.innerHTML='<div class="dash-empty">Nenhum recibo emitido ainda.</div>';return}
+  const ultimos=lista.slice(-5).reverse();
+  el.innerHTML=ultimos.map(r=>`
+    <div class="dash-list-item">
+      <div style="display:flex;align-items:center;overflow:hidden;gap:8px">
+        <span class="badge badge-dourado">Nº ${String(r.numero).padStart(4,'0')}</span>
+        <span class="dash-list-name">${r.recebedor.nome} → ${r.emitente.nome}</span>
+      </div>
+      <span class="dash-list-value">R$ ${r.valor}</span>
+    </div>`).join('');
+}
+
+/* ============================================================
+   RELATÓRIO PERSONALIZADO (pagador, recebedor, valor, data)
+   ============================================================ */
+function renderRelatorioPersonalizado(){
+  const pagador=(document.getElementById('rp-pagador').value||'').toLowerCase();
+  const recebedor=(document.getElementById('rp-recebedor').value||'').toLowerCase();
+  const valorMinStr=document.getElementById('rp-valor-min').value;
+  const valorMaxStr=document.getElementById('rp-valor-max').value;
+  const dIni=document.getElementById('rp-data-ini').value;
+  const dFim=document.getElementById('rp-data-fim').value;
+  const valorMin=valorMinStr?parseFloat(valorMinStr.replace(/\./g,'').replace(',','.')):null;
+  const valorMax=valorMaxStr?parseFloat(valorMaxStr.replace(/\./g,'').replace(',','.')):null;
+
+  const all=getRecibos();
+  let lista=all.slice();
+  if(pagador) lista=lista.filter(r=>r.recebedor.nome.toLowerCase().includes(pagador));
+  if(recebedor) lista=lista.filter(r=>r.emitente.nome.toLowerCase().includes(recebedor));
+  if(valorMin!==null) lista=lista.filter(r=>r.valorNum>=valorMin);
+  if(valorMax!==null) lista=lista.filter(r=>r.valorNum<=valorMax);
+  if(dIni) lista=lista.filter(r=>r.dataISO>=dIni);
+  if(dFim) lista=lista.filter(r=>r.dataISO<=dFim);
+
+  const rows=lista.map(r=>{const ri=all.indexOf(r);return`<tr>
+    <td><span class="badge badge-dourado">Nº ${String(r.numero).padStart(4,'0')}</span></td>
+    <td>${r.data}</td>
+    <td>${r.recebedor.nome}<br><small style="color:#6b7280">${r.recebedor.doc}</small></td>
+    <td>${r.emitente.nome}<br><small style="color:#6b7280">${r.emitente.doc}</small></td>
+    <td style="font-weight:700;color:#1a472a">R$ ${r.valor}</td>
+    <td style="white-space:nowrap">${botoesAcao(ri)}</td>
+  </tr>`});
+
+  document.getElementById('tabela-personalizado').innerHTML=tabelaHTML(
+    ['Nº','Data','Pagador','Recebedor','Valor','Ações'],rows,'Nenhum recibo encontrado com os filtros informados.'
+  );
+
+  const tot=lista.reduce((s,r)=>s+r.valorNum,0);
+  document.getElementById('summary-personalizado').innerHTML=`
+    <div class="summary-card"><div class="sc-label">Recibos Encontrados</div><div class="sc-value">${lista.length}</div></div>
+    <div class="summary-card"><div class="sc-label">Valor Total</div><div class="sc-value">R$ ${tot.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></div>
+    <div class="summary-card"><div class="sc-label">Valor Médio</div><div class="sc-value">R$ ${(lista.length?tot/lista.length:0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></div>`;
+}
+
+function limparFiltrosPersonalizado(){
+  ['rp-pagador','rp-recebedor','rp-valor-min','rp-valor-max','rp-data-ini','rp-data-fim'].forEach(id=>document.getElementById(id).value='');
+  renderRelatorioPersonalizado();
+}
+
+function exportarCSVPersonalizado(){
+  const pagador=(document.getElementById('rp-pagador').value||'').toLowerCase();
+  const recebedor=(document.getElementById('rp-recebedor').value||'').toLowerCase();
+  const valorMinStr=document.getElementById('rp-valor-min').value;
+  const valorMaxStr=document.getElementById('rp-valor-max').value;
+  const dIni=document.getElementById('rp-data-ini').value;
+  const dFim=document.getElementById('rp-data-fim').value;
+  const valorMin=valorMinStr?parseFloat(valorMinStr.replace(/\./g,'').replace(',','.')):null;
+  const valorMax=valorMaxStr?parseFloat(valorMaxStr.replace(/\./g,'').replace(',','.')):null;
+
+  let lista=getRecibos();
+  if(pagador) lista=lista.filter(r=>r.recebedor.nome.toLowerCase().includes(pagador));
+  if(recebedor) lista=lista.filter(r=>r.emitente.nome.toLowerCase().includes(recebedor));
+  if(valorMin!==null) lista=lista.filter(r=>r.valorNum>=valorMin);
+  if(valorMax!==null) lista=lista.filter(r=>r.valorNum<=valorMax);
+  if(dIni) lista=lista.filter(r=>r.dataISO>=dIni);
+  if(dFim) lista=lista.filter(r=>r.dataISO<=dFim);
+
+  if(!lista.length){showToast('Nenhum recibo para exportar.',true);return}
+  const h='Número,Data,Pagador,CPF/CNPJ Pagador,Recebedor,CPF/CNPJ Recebedor,Valor,Referente\n';
+  const rows=lista.map(r=>`${r.numero},"${r.data}","${r.recebedor.nome}","${r.recebedor.doc}","${r.emitente.nome}","${r.emitente.doc}","${r.valor}","${r.descricao||''}"`).join('\n');
+  const blob=new Blob(['\uFEFF'+h+rows],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='relatorio_personalizado.csv';a.click();
+}
+
+/* ============================================================
+   BACKUP AUTOMÁTICO (File System Access API)
+   ============================================================ */
+let _dirHandleBackup=null;
+let _timerBackupAuto=null;
+
+function suportaFileSystemAPI(){ return 'showDirectoryPicker' in window; }
+
+async function escolherPastaBackup(){
+  if(!suportaFileSystemAPI()){
+    showToast('❌ Seu navegador não suporta esse recurso. Use Chrome ou Edge.',true);
+    return;
+  }
+  try{
+    _dirHandleBackup=await window.showDirectoryPicker();
+    const cfg=getCfg();
+    cfg.backupAutoPasta=_dirHandleBackup.name;
+    saveCfg(cfg);
+    document.getElementById('backup-auto-pasta-nome').textContent='📁 '+_dirHandleBackup.name;
+    document.getElementById('backup-auto-status').style.display='block';
+    showToast('✅ Pasta selecionada: '+_dirHandleBackup.name);
+  }catch(e){
+    if(e.name!=='AbortError') showToast('❌ Erro ao selecionar pasta.',true);
+  }
+}
+
+async function salvarBackupNaPasta(){
+  if(!_dirHandleBackup){showToast('⚠️ Selecione uma pasta de backup primeiro.',true);return false}
+  try{
+    const perm=await _dirHandleBackup.queryPermission({mode:'readwrite'});
+    if(perm!=='granted'){
+      const novoPerm=await _dirHandleBackup.requestPermission({mode:'readwrite'});
+      if(novoPerm!=='granted'){showToast('❌ Permissão de escrita negada.',true);return false}
+    }
+    const lista=getRecibos();
+    const payload={app:'RecibosApp',versao:'1.0',data_backup:new Date().toISOString(),total_recibos:lista.length,recibos:lista};
+    const nomeArquivo=`RecibosApp_AutoBackup_${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.json`;
+    const fileHandle=await _dirHandleBackup.getFileHandle(nomeArquivo,{create:true});
+    const writable=await fileHandle.createWritable();
+    await writable.write(JSON.stringify(payload,null,2));
+    await writable.close();
+    const cfg=getCfg();
+    cfg.ultimoBackupAuto=new Date().toISOString();
+    saveCfg(cfg);
+    atualizarInfoBackupAuto();
+    return true;
+  }catch(e){
+    console.error('Erro backup automático:',e);
+    return false;
+  }
+}
+
+function ativarBackupAutomatico(){
+  const intervaloMin=parseInt(document.getElementById('backup-auto-intervalo').value);
+  if(!_dirHandleBackup){showToast('⚠️ Selecione a pasta de destino primeiro.',true);return}
+  if(!intervaloMin||intervaloMin<1){showToast('⚠️ Informe um intervalo válido em minutos.',true);return}
+  const cfg=getCfg();
+  cfg.backupAutoAtivo=true;
+  cfg.backupAutoIntervalo=intervaloMin;
+  saveCfg(cfg);
+  iniciarTimerBackupAuto(intervaloMin);
+  atualizarInfoBackupAuto();
+  showToast('✅ Backup automático ativado a cada '+intervaloMin+' minuto(s)!');
+}
+
+function desativarBackupAutomatico(){
+  const cfg=getCfg();
+  cfg.backupAutoAtivo=false;
+  saveCfg(cfg);
+  if(_timerBackupAuto){clearInterval(_timerBackupAuto);_timerBackupAuto=null}
+  atualizarInfoBackupAuto();
+  showToast('⏸️ Backup automático desativado.');
+}
+
+function iniciarTimerBackupAuto(intervaloMin){
+  if(_timerBackupAuto) clearInterval(_timerBackupAuto);
+  _timerBackupAuto=setInterval(async()=>{
+    const ok=await salvarBackupNaPasta();
+    if(ok) showToast('📦 Backup automático realizado!');
+  },intervaloMin*60*1000);
+}
+
+function iniciarBackupAutoSeAtivo(){
+  const cfg=getCfg();
+  if(cfg.backupAutoAtivo&&cfg.backupAutoIntervalo&&document.getElementById('backup-auto-aviso-sessao')){
+    document.getElementById('backup-auto-aviso-sessao').style.display='block';
+  }
+}
+
+function atualizarInfoBackupAuto(){
+  const cfg=getCfg();
+  const statusEl=document.getElementById('backup-auto-status');
+  if(!statusEl) return;
+  const pastaNomeEl=document.getElementById('backup-auto-pasta-nome');
+  const ultimoEl=document.getElementById('backup-auto-ultimo');
+  const intervaloInput=document.getElementById('backup-auto-intervalo');
+  const ativoBadge=document.getElementById('backup-auto-ativo-badge');
+
+  if(cfg.backupAutoIntervalo) intervaloInput.value=cfg.backupAutoIntervalo;
+  if(cfg.backupAutoPasta){pastaNomeEl.textContent='📁 '+cfg.backupAutoPasta;statusEl.style.display='block'}
+
+  if(cfg.ultimoBackupAuto){
+    const d=new Date(cfg.ultimoBackupAuto);
+    ultimoEl.textContent='Último backup: '+d.toLocaleDateString('pt-BR')+' às '+d.toLocaleTimeString('pt-BR');
+  }else{
+    ultimoEl.textContent='Nenhum backup automático realizado ainda nesta sessão.';
+  }
+
+  if(cfg.backupAutoAtivo && _dirHandleBackup){ativoBadge.textContent='🟢 Ativo';ativoBadge.style.color='#065f46'}
+  else if(cfg.backupAutoAtivo){ativoBadge.textContent='🟡 Aguardando seleção da pasta';ativoBadge.style.color='#92400e'}
+  else{ativoBadge.textContent='⚪ Inativo';ativoBadge.style.color='#6b7280'}
+}
+
 /* TOAST */
 function showToast(msg,err){
   const t=document.getElementById('toast');t.textContent=msg;
@@ -1569,7 +1618,7 @@ function showToast(msg,err){
 }
 
 /* BOOT */
-window.addEventListener('load',()=>{initAuth()});
+window.addEventListener('load',()=>{initApp();iniciarBackupAutoSeAtivo()});
 </script>
 </body>
 </html>
